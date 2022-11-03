@@ -4,9 +4,13 @@ import { Insta } from '../types'
 function Input(props: Insta.InputProps) {
     const {
         label = "Enter your email",
+        userNameExists = false,
+        isUsernameValid= false,
         type = "text",
+        error,
         className = "",
         placeholder = label,
+        errorStyle ="border-red-500 text-red-600",
         ...restProps
     } = props;
 
@@ -20,6 +24,10 @@ function Input(props: Insta.InputProps) {
                 ref={inputRef}
                 {...restProps}
             />
+            <span className={`text-xs ${errorStyle}`}>{error}</span>
+            {/* {
+                userNameExists ? <span className='text-red-600 text-xs'>*username already exists</span> : isUsernameValid ? <span className='text-red-600 text-xs'>*username must be 3-10(a-z)</span> : ""
+            } */}
             <label
                 className="cursor-text absolute top-1 left-0 text-xs px-4 text-gray-500/75 transition-all duration-150 peer-placeholder-shown:top-[calc(50%-8px)] peer-placeholder-shown:text-sm"
                 onClick={() => {

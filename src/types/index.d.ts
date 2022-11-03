@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/auth'
 import { FunctionTypeNode } from 'typescript';
+import { fireStore } from '../firebase';
 
 declare namespace Insta {
     interface Children extends React.PropsWithChildren<{}> { }
@@ -8,6 +9,8 @@ declare namespace Insta {
 
     type CreateUserPromise = { success: boolean; message: string }
 
+    // type UserData = undefined | fireStore.DocumentData;
+
     interface AuthContext {
         currentUser: CurrentUser;
         createUserWithEmail: (params: { email: string; password: string; }) => Promise<firebase.UserCredential>;
@@ -15,12 +18,27 @@ declare namespace Insta {
         loginWithEmailAndPassword: (params: { email: string; password: string; }) => Promise<firebase.UserCredential>;
     }
 
+    // interface UserContext {
+    //     userData: UserData;
+    //     isLoading: boolean;
+    //     getUserByUserID: (params: {uid: string}) => Promise<fireStore>;
+    // }
+
     interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
         label?: string;
+        userNameExists?: boolean;
+        isUsernameValid?: boolean;
+        error?: string;
+        isEmailValid?: boolean;
+        errorStyle?: string;
     }
 
     interface ButtonProps extends Children, React.ButtonHTMLAttributes<HTMLButtonElement> {
         buttonType?: 'auth' | 'others';
+    }
+
+    interface SearchProps {
+        className?: string;
     }
 
     interface Dropdown {
@@ -86,6 +104,7 @@ declare namespace Insta {
         byUser?: string; 
         postID?: string;
         createdAt?: Date;
+        id?: string;
     }
     
     interface deleteProp {
@@ -99,9 +118,36 @@ declare namespace Insta {
         close?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     }
 
-    interface UserModalProp {
-        isLikeActive?: boolean;
-        isClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-        postID?: string;
+    interface followProp {
+        isFollow: boolean | null;
+        onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     }
+
+    interface UserModalProp  {
+        isUserModalActive?: boolean;
+        isClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+        ID?: string;
+        currentUserID?: string;
+        followeeID?: string;
+        header?: string;
+        collectionName?: string;
+    }
+
+    interface LikeButtonProp {
+        onLike?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    }
+
+    interface CropImageProp  {
+        isCrop?: boolean;
+        isClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+        header?: string;
+        src?:  any;
+        handleCrop?: (croppedImage: string | undefined) => void;
+    }
+
+    interface ToastProp {
+        status: 'success' | 'fail' | 'deleted' | '';
+        message: '' | string;
+    }
+
 }

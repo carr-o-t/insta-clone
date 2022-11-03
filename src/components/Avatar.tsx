@@ -8,10 +8,9 @@ function Avatar({
   image,
   style = {}
 }: Insta.AvatarProps) {
-  console.log("/profile/" + link)
   return (
     <Link to={`/profile/${link}`} className={`${className} rounded-full`} style={style}>
-      <img src={image} alt="" className='w-[inherit] h-[inherit] object-cover rounded-full' />
+      <img src={image} loading="lazy" alt="" className='w-[inherit] h-[inherit] object-cover rounded-full' />
     </Link>
   )
 }

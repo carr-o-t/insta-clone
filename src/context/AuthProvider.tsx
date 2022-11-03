@@ -29,7 +29,16 @@ function AuthProvider({ children }: Insta.Children) {
 
     function createUserWithEmail({ email = "", password = "" }: CreateUserParams) {
         return firebaseAuth.createUserWithEmailAndPassword(auth, email, password)
+        
     }
+
+    // function signInWithEmail() {
+    //     const config = {
+    //         url: "/",
+    //         handleCodeInApp: true,
+    //     };
+    //     return firebaseAuth.sendSignInLinkToEmail(auth, email, config)
+    // }
 
     function signInWithGoogle(): Promise<firebaseAuth.UserCredential> {
         const provider = new firebaseAuth.GoogleAuthProvider();

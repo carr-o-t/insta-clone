@@ -1,34 +1,37 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useParams } from 'react-router-dom'
-import ProfileHeader from '../components/ProfileHeader'
-import ProfileBody from '../components/ProfileBody'
 import { getUserByID } from '../functions/services';
-import { fireStore } from '../firebase';
-
-
+import Head from '../components/Head';
 
 function Profile() {
     const { uid } = useParams();
+    const [paramUID, setParamUID] = React.useState<string | undefined>(uid)
     const [data, setData] = React.useState<any>([])
     const dataRef = React.useRef() as React.MutableRefObject<any>
 
-    React.useEffect(() => { 
+    React.useEffect(() => {
         dataRef.current = data;
         setData(dataRef.current)
-        // console.log(dataRef.current[0].uid)
     }, [data])
-    
+
     React.useEffect(() => {
-        getUserByID(uid)
-            .then((result) => {setData(result)})
-            .catch((err) => console.log(err));
-    }, [])
+        if (uid === paramUID) {
+            getUserByID(uid)
+                .then((result) => { setData(result) })
+                .catch((err) => console.log(err));
+        }
+        else {
+            window.location.reload();
+            getUserByID(uid)
+                .then((result) => { setData(result) })
+                .catch((err) => console.log(err));
+        }
+    }, [uid])
     return (
-        <div className="max-w-4xl mx-auto smmd:p-2 ">
+        <div className="max-w-4xl w-full mx-auto smmd:p-2 mb-4">
             <div className="w-full h-full ">
-                <ProfileHeader userID={uid} />
+                    <Head userID={uid} />
             </div>
-            <ProfileBody userID={uid} />
         </div>
     )
 }

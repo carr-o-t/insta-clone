@@ -3,8 +3,6 @@ import * as firebaseAuth from 'firebase/auth';
 import * as fireStore from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
-console.log(process.env.REACT_APP_API_KEY)
-console.log(process.env.REACT_APP_PROJECT_ID)
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,

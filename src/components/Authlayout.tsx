@@ -43,7 +43,7 @@ function Authlayout(props: AuthlayoutProps) {
                                     <span>
                                         <GoogleIcon className="h-6 w-auto" />
                                     </span>
-                                    <span className='text-gray-600 font-semibold'>
+                                    <span className='text-festa-one hover:text-gray-500 font-semibold'>
                                         Log in with Google
                                     </span>
                                 </Button>
@@ -64,7 +64,7 @@ function Authlayout(props: AuthlayoutProps) {
                 <span>{bottomContainerText}&nbsp;</span>
                 <Link
                     to={bottomContainerLink !== "" ? bottomContainerLink : "/"}
-                    className="text-blue-600 font-semibold text-lg"
+                    className="text-festa-two font-semibold text-lg"
                 >
                     {bottomContainerLinkText}
                 </Link>
