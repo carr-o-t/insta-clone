@@ -8,14 +8,7 @@ import { fireStore, store } from '../firebase'
 import { useAuth } from '../context/AuthProvider'
 import { addUserToLiked, removeUserFromLiked } from '../functions/services'
 import UserModal from './UserModal'
-import { Link } from 'react-router-dom'
 import DeletePopUp from './DeletePopUp'
-// import { getUserByID } from '../functions/services'
-
-/* TODO: post data display
-        like count
-        slider for posts
-*/
 
 function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewPostProps) {
 
@@ -123,13 +116,13 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                             >
 
 
-                                <Dialog.Panel className="w-[calc(100vw_-_2rem)] sm:w-full h-full max-w-[80%] aspect-[1/2] sm:aspect-video transform  rounded-2xl bg-festa-one text-left align-middle shadow-xl transition-all">
+                                <Dialog.Panel className="w-[calc(100vw_-_2rem)] sm:w-full h-full max-w-[80%] aspect-[1/1.6] sm:aspect-video transform  rounded-2xl bg-festa-one text-left align-middle shadow-xl transition-all">
 
 
 
                                     <div className="flex flex-col sm:flex-row h-full">
                                         <div className="flex justify-between items-center p-3 sm:hidden">
-                                            <div className="flex gap-4 items-center p-3 ">
+                                            <div className="flex gap-4 items-center ">
                                             <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
                                             <span className="text-sm font-semibold">{user?.username}</span>
                                         </div>
@@ -161,26 +154,26 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                             </div>
                                         </div>
                                         <div className="grow flex flex-col justify-between">
-                                            <div className="flex justify-between p-3 items-center">
-                                                <div className="gap-4 items-center p-3 hidden sm:flex">
+                                            <div className="hidden sm:flex justify-between items-center">
+                                                <div className="gap-4 items-center px-3 sm:p-3 hidden sm:flex">
                                                     <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
                                                     <span className="text-sm font-semibold">{user?.username}</span>
                                                 </div>
                                                 {
                                                     currentUser?.uid === user?.uid &&
                                                     <button onClick={(e) => setIsDelete(true)}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+                                                        {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                                        </svg>
+                                                        </svg> */}
 
                                                     </button>
                                                 }
                                             </div>
-                                            <div className="border-t border-t-festa-eight flex gap-2 items-baseline p-3">
+                                            <div className="border-t border-t-festa-eight flex gap-2 items-baseline px-3 py-1 sm:p-3">
                                                 <div className="">
                                                     <span className="text-sm font-semibold">{user?.username}</span>
                                                 </div>
-                                                <span className={`text-xs    text-gray-900 flex flex-wrap items-center sm:text-sm`}>
+                                                <span className={`text-xs text-gray-900 flex flex-wrap items-center sm:text-sm`}>
                                                     {
                                                         (posts.postDetail.caption || '').length > 35 ?
                                                             <>
@@ -196,22 +189,22 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                     }
                                                 </span>
                                             </div>
-                                            <div className="grow text-sm p-3" >
+                                            <div className="hidden sm:block grow text-sm p-3" >
                                                 no comments!
                                             </div>
-                                            <div className="p-4 flex justify-between items-center">
+                                            <div className="px-4 py-1 sm:p-4 flex justify-between items-center">
                                                 <div className="flex gap-4 ">
                                                     {
                                                         icons.map(({ id, icon: Component, onClick }) => {
                                                             return (
-                                                                <Component className={`h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
+                                                                <Component className={`h-6 sm:h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
                                                             )
                                                         })
                                                     }
                                                 </div>
                                                 <BookmarkIcon className="h-7 w-auto" />
                                             </div>
-                                            <div className="p-4 text-sm flex gap-x-2">
+                                            <div className="px-4 sm:p-4 text-sm flex gap-x-2">
                                                 <p className="">{likeCount}</p>
                                                 <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleisUserModalActive(e)}>likes</a>
                                             </div>
