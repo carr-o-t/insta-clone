@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthProvider'
 import { addUserToLiked, removeUserFromLiked } from '../functions/services'
 import UserModal from './UserModal'
 import { Link } from 'react-router-dom'
+import DeletePopUp from './DeletePopUp'
 // import { getUserByID } from '../functions/services'
 
 /* TODO: post data display
@@ -20,11 +21,14 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
 
     const { currentUser } = useAuth()
     const [isLiked, setIsLiked] = useState<boolean | null>(null)
+    const [isDelete, setIsDelete] = useState<boolean>(false)
     const [user, setUser] = useState<fireStore.DocumentData | undefined>()
     const [isReadMore, setIsReadMore] = useState<boolean>(false)
     const [userRef, setUserRef] = useState<fireStore.DocumentData | undefined>()
-    const [isLikeActive, setIsLikeActive] = useState<boolean>(false)
+    const [isUserModalActive, setIsUserModalActive] = useState<boolean>(false)
+    const [likeCount, setLikeCount] = useState(0)
     const [postid, setPostId] = useState<string | undefined>("")
+    const closeModal = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
     const icons = React.useMemo(() => {
         return [
             { id: 'hearticon', icon: HeartIcon, onClick: () => { setIsLiked(typeof isLiked === null ? true : !isLiked) } },
@@ -33,7 +37,9 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
         ]
     }, [isLiked])
 
-
+    const handleRef = () => {
+        closeModal.current.click();
+    }
     const getUserByID = async () => {
         const collRef = fireStore.doc(store, `users/${userID}`);
         await fireStore.onSnapshot(collRef, (querySnapshot) => {
@@ -49,13 +55,18 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
     }
 
     React.useEffect(() => {
-        console.log(postID)
         getUserByID();
         getIsLikedByUser();
-        console.log(isLiked)
-        console.log(user)
-        console.log(posts.postDetail.likes)
-    }, [])
+    }, [viewPost])
+
+    React.useEffect(() => {
+        if (viewPost) {
+            const postRef = fireStore.collection(store, `posts/${posts.id}/likedBy`)
+            fireStore.onSnapshot(postRef, (querySnapShot) => {
+                setLikeCount(querySnapShot.size)
+            })
+        }
+    }, [viewPost])
 
     React.useEffect(() => {
         if (isLiked == true) {
@@ -70,19 +81,19 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
         setIsReadMore(!isReadMore)
     }
 
-    const handleIsLikeActive = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const handleisUserModalActive = (e: React.MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault();
-        setIsLikeActive(true);
+        setIsUserModalActive(true);
     }
 
     function handleClose() {
-        setIsLikeActive(false)
+        setIsUserModalActive(false)
     }
 
     return (
         <>
             <Transition appear show={viewPost} as={Fragment}>
-                <Dialog as="div" className="relative z-10" onClose={(e) => onClose}>
+                <Dialog as="div" className="relative z-10" onClose={handleRef}>
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -96,7 +107,7 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                     </Transition.Child>
 
                     <div className="fixed inset-0 overflow-y-auto">
-                        <button className="absolute right-5 top-5 cursor-pointer p-1 bg-white/50 hover:bg-white/30 rounded-full" onClick={onClose}>
+                        <button ref={closeModal} className="absolute right-5 top-5 cursor-pointer p-1 bg-festa-three text-festa-two hover:bg-festa-six hover:text-festa-one rounded-full" onClick={onClose}>
                             <XIcon className="h-5 w-auto" />
                         </button>
                         <div className="flex min-h-full items-center justify-center p-4 text-center">
@@ -112,16 +123,27 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                             >
 
 
-                                <Dialog.Panel className="w-full h-full max-w-[80%] sm:aspect-video transform  rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
+                                <Dialog.Panel className="w-[calc(100vw_-_2rem)] sm:w-full h-full max-w-[80%] aspect-[1/2] sm:aspect-video transform  rounded-2xl bg-festa-one text-left align-middle shadow-xl transition-all">
 
 
 
                                     <div className="flex flex-col sm:flex-row h-full">
-                                        <div className="flex gap-4 items-center p-3 sm:hidden">
+                                        <div className="flex justify-between items-center p-3 sm:hidden">
+                                            <div className="flex gap-4 items-center p-3 ">
                                             <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
                                             <span className="text-sm font-semibold">{user?.username}</span>
                                         </div>
-                                        <div className="basis-[50%] shrink-0 bg-black sm:rounded-tl-2xl sm:rounded-bl-2xl overflow-hidden">
+                                        {
+                                                currentUser?.uid === user?.uid &&
+                                            <button onClick={(e) => setIsDelete(true)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                                </svg>
+
+                                            </button>
+                                        }
+                                        </div>
+                                        <div className="sm:basis-[50%] basis-[64%] shrink-0 bg-black sm:rounded-tl-2xl sm:rounded-bl-2xl overflow-hidden">
                                             <div className="group w-full h-full flex justify-center items-center bg-black relative overflow-hidden">
                                                 {
                                                     posts.postDetail.mediaType === 'video' ?
@@ -134,16 +156,27 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                             style={{ width: '100%', aspectRatio: '16/9' }}
                                                         />
                                                         :
-                                                        <img src={posts.postDetail.imgURL} alt="" className="w-auto h-auto object-cover smmd:h-auto" />
+                                                        <img src={posts.postDetail.imgURL} loading="lazy" alt="" className="w-full smmd:w-auto h-auto object-cover smmd:h-auto" />
                                                 }
                                             </div>
                                         </div>
                                         <div className="grow flex flex-col justify-between">
-                                            <div className="gap-4 items-center p-3 hidden sm:flex">
-                                                <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
-                                                <span className="text-sm font-semibold">{user?.username}</span>
+                                            <div className="flex justify-between p-3 items-center">
+                                                <div className="gap-4 items-center p-3 hidden sm:flex">
+                                                    <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
+                                                    <span className="text-sm font-semibold">{user?.username}</span>
+                                                </div>
+                                                {
+                                                    currentUser?.uid === user?.uid &&
+                                                    <button onClick={(e) => setIsDelete(true)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                                        </svg>
+
+                                                    </button>
+                                                }
                                             </div>
-                                            <div className="border-t border-t-gray-200 flex gap-2 items-baseline p-3">
+                                            <div className="border-t border-t-festa-eight flex gap-2 items-baseline p-3">
                                                 <div className="">
                                                     <span className="text-sm font-semibold">{user?.username}</span>
                                                 </div>
@@ -171,7 +204,7 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                     {
                                                         icons.map(({ id, icon: Component, onClick }) => {
                                                             return (
-                                                                <Component className={`h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-red-600 stroke-0' : ""}`} onClick={onClick} />
+                                                                <Component className={`h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
                                                             )
                                                         })
                                                     }
@@ -179,8 +212,8 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                 <BookmarkIcon className="h-7 w-auto" />
                                             </div>
                                             <div className="p-4 text-sm flex gap-x-2">
-                                                <p className="">{posts.postDetail.likes}</p>
-                                                <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleIsLikeActive(e)}>likes</a>
+                                                <p className="">{likeCount}</p>
+                                                <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleisUserModalActive(e)}>likes</a>
                                             </div>
                                         </div>
                                     </div>
@@ -192,8 +225,15 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                 </Dialog>
             </Transition>
             <UserModal
-                isLikeActive={isLikeActive}
+                isUserModalActive={isUserModalActive}
                 isClose={(e) => handleClose()}
+                ID={postID}
+                header="Likes"
+                collectionName="posts"
+            />
+            <DeletePopUp
+                isDelete={isDelete}
+                isClose={(e) => setIsDelete(false)}
                 postID={postID}
             />
         </>
