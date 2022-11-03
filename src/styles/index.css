@@ -783,6 +783,10 @@ video {
   aspect-ratio: 1/2;
 }
 
+.aspect-\[1\/1\.6\]{
+  aspect-ratio: 1/1.6;
+}
+
 .h-6{
   height: 1.5rem;
 }
@@ -2246,6 +2250,10 @@ body{
     height: 2rem;
   }
 
+  .sm\:h-7{
+    height: 1.75rem;
+  }
+
   .sm\:w-full{
     width: 100%;
   }
@@ -2305,6 +2313,14 @@ body{
 
   .sm\:p-0{
     padding: 0px;
+  }
+
+  .sm\:p-3{
+    padding: 0.75rem;
+  }
+
+  .sm\:p-4{
+    padding: 1rem;
   }
 
   .sm\:px-4{
