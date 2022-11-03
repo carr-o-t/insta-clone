@@ -4,32 +4,91 @@ import { fireStore, store } from '../firebase'
 import { Insta } from '../types'
 import { XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
+import Follow from './buttons/Follow'
+import { useAuth } from '../context/AuthProvider'
+import { addUserToFolloweeAndFollower, getUserByID, removeUserFromFolloweeAndFollower } from '../functions/services'
+import { ReactComponent as FollowingIcon } from '../assets/svgs/followed_icon.svg'
 
-function UserModal({ isLikeActive, isClose, postID }: Insta.UserModalProp) {
+function UserModal({
+    isUserModalActive,
+    isClose,
+    ID,
+    header,
+    collectionName
+}: Insta.UserModalProp) {
+
+    const { currentUser } = useAuth()
 
     const [usersList, setUsersList] = useState<fireStore.DocumentData | undefined>([])
+    const [user, setUser] = useState<fireStore.DocumentData | undefined>()
     const closeModal = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
+    const [isFollow, setIsFollow] = React.useState<boolean | null>(null)
+    const [followeeID, setFolloweeID] = React.useState<string | undefined>()
+    const [followerData, setFollowerData] = React.useState<fireStore.DocumentData | undefined>()
+    const [followeeData, setFolloweeData] = React.useState<fireStore.DocumentData | undefined>()
+    const [loading, setLoading] = React.useState<boolean>(false)
+
+    const handleFollow = (followee: string | undefined, idx: any) => {
+        setIsFollow(typeof isFollow === null ? true : !isFollow);
+        setFolloweeID(followee);
+    }
+
+    const getIsFollowedByUser = async () => {
+        const userFolloweeDocSnap = await fireStore.getDoc(fireStore.doc(store, `users/${currentUser?.uid}/followees/${followeeID}`));
+        if (userFolloweeDocSnap.exists()) {
+            setIsFollow(true);
+        }
+    }
+
+    React.useEffect(() => {
+        getUserByID(currentUser?.uid).then((result) => setFollowerData(result));
+        getUserByID(followeeID).then((result) => setFolloweeData(result));
+        getUserByID(ID).then((result) => setUser(result))
+    }, [isFollow])
+
+    React.useEffect(() => {
+        if (isFollow == true) {
+            // addUserToFolloweeAndFollower(currentUser?.uid, followeeID, { ...followerData, uid: currentUser?.uid }, { ...followeeData, uid: followeeID })
+        }
+        if (isFollow == false) {
+            // removeUserFromFolloweeAndFollower(currentUser?.uid, followeeID)
+        }
+    }, [isFollow])
 
     const handleRef = () => {
-        console.log("clicked outside")
         closeModal.current.click();
     }
 
     const getLikedUsers = async () => {
-        const collRef = fireStore.collection(store, `posts/${postID}/likedBy`);
-        await fireStore.onSnapshot(collRef, (querySnapshot) => {
-            setUsersList(querySnapshot.docs.map(doc => ({ ...doc.data() })))
-        })
+        if (collectionName === "posts") {
+            const collRef = fireStore.collection(store, `posts/${ID}/likedBy`);
+            await fireStore.onSnapshot(collRef, (querySnapshot) => {
+                setUsersList(querySnapshot.docs.map(doc => ({ ...doc.data() })))
+            })
+        }
+        else if (collectionName === "followers") {
+            const collRef = fireStore.collection(store, `users/${ID}/followers`);
+            await fireStore.onSnapshot(collRef, (querySnapshot) => {
+                setUsersList(querySnapshot.docs.map(doc => ({ ...doc.data() })))
+            })
+        }
+        else if (collectionName === "followees") {
+            const collRef = fireStore.collection(store, `users/${ID}/followees`);
+            await fireStore.onSnapshot(collRef, (querySnapshot) => {
+                setUsersList(querySnapshot.docs.map(doc => ({ ...doc.data() })))
+            })
+        }
+        else return
     }
     React.useEffect(() => {
-        console.log(postID)
         getLikedUsers();
-    }, [isLikeActive])
+        getIsFollowedByUser();
+    }, [isUserModalActive])
 
-    if (!isLikeActive) return <></>
+    if (!isUserModalActive) return <></>
     return (
         <>
-            <Transition appear show={isLikeActive} as={Fragment}>
+            <Transition appear show={isUserModalActive} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={handleRef}>
                     <Transition.Child
                         as={Fragment}
@@ -54,15 +113,15 @@ function UserModal({ isLikeActive, isClose, postID }: Insta.UserModalProp) {
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel as="div" className="w-full max-w-md  overflow-scroll transform rounded-2xl bg-white p-4 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Panel as="div" className="w-full max-w-md  overflow-scroll transform rounded-2xl bg-festa-one p-4 text-left align-middle shadow-xl transition-all">
                                     <Dialog.Title
                                         as="div"
-                                        className="relative border-b border-b-gray-400"
+                                        className="relative border-b border-festa-five"
                                     >
-                                        <h4 className="text-md font-medium leading-6 text-gray-900 text-center tracking-wider mb-2">Likes</h4>
+                                        <h4 className="text-md font-medium leading-6 text-gray-900 text-center tracking-wider mb-2">{header}</h4>
                                         <button
                                             type="button"
-                                            className="absolute top-0 right-0 h-7 w-7 p-2 rounded-md border border-transparent bg-blue-100 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            className="absolute top-0 right-0 h-7 w-7 p-2 rounded-full border border-transparent bg-festa-three text-sm font-medium text-festa-two hover:bg-festa-six hover:text-festa-one focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                             onClick={isClose}
                                             ref={closeModal}
                                         >
@@ -70,23 +129,45 @@ function UserModal({ isLikeActive, isClose, postID }: Insta.UserModalProp) {
                                         </button>
                                     </Dialog.Title>
                                     <div className="mt-2 max-h-56 overflow-scroll">
-                                        {
-                                            usersList?.map((user: any) => {
+                                        {usersList?.length > 0 ?
+                                            usersList?.map((user: any, idx: any) => {
                                                 return (
                                                     <div className="flex  flex-col gap-y-4">
-                                                        <Link to={`/profile/${user.uid}`} className="flex gap-3 items-center cursor-pointer hover:bg-blue-200 p-2 rounded-md">
+                                                        {/* <div className="flex justify-between items-center  cursor-pointer hover:bg-festa-three p-2 rounded-md"> */}
+                                                        <Link to={`/profile/${user.uid}`} className="flex gap-3 items-center cursor-pointer hover:bg-festa-six hover:text-festa-one transition-all duration-100 p-2 rounded-md">
                                                             <div className="h-10 w-10 rounded-full">
-                                                                <img src={user.photoURL} alt="" className="h-10 w-10 object-cover rounded-full" />
+                                                                <img src={user.photoURL} loading="lazy" alt="" className="h-10 w-10 object-cover rounded-full" />
                                                             </div>
                                                             <span className="text-sm font-semibold">{user.username}</span>
                                                         </Link>
+                                                        {/* <button
+                                                                className={`text-white font-semibold px-4 py-1 rounded-lg cursor-pointer ${isFollow ? 'bg-festa-one border border-gray-300' : 'bg-blue-500'}`}
+                                                                onClick={(e) => handleFollow(user.uid, idx)}
+                                                            >
+                                                                {
+                                                                    isFollow ?
+                                                                        <FollowingIcon className="h-6 w-6" />
+                                                                        :
+                                                                        <span className="">Follow</span>
+                                                                }
+                                                            </button> */}
+                                                        {/* <Follow key={idx} isFollow={isFollow} onClick={(e) => handleFollow(user.uid, idx)} /> */}
+                                                        {/* </div> */}
                                                     </div>
                                                 )
                                             })
+                                            :
+                                            <div className="text-center text-sm font-medium p-4">
+                                                {
+                                                    collectionName === "posts" ? <span className="">be the first to like this post!</span>
+                                                        :
+                                                        collectionName === "followers" ? <span className="">{user?.username} has no follwers yet!</span>
+                                                            :
+                                                            <span className="">{user?.username} is following no one!</span>
+                                                }
+                                            </div>
                                         }
                                     </div>
-
-
                                 </Dialog.Panel>
                             </Transition.Child>
                         </div>
