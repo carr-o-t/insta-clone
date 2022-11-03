@@ -1,8 +1,7 @@
-import React, { Fragment, ReactEventHandler, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Insta } from '../types';
 import { XIcon } from '@heroicons/react/outline'
-import { dummyData } from '../data/Data'
 import { ReactComponent as UploadPostIcon } from '../assets/svgs/upload_post.svg'
 import { useNavigate } from 'react-router-dom';
 import { collection, serverTimestamp } from 'firebase/firestore';
@@ -37,6 +36,7 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
 
     useEffect(() => {
         setPostImage(null)
+        console.log("render iscreate change")
     }, [isCreate])
 
     const handleRef = () => {
@@ -56,8 +56,10 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
     const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files !== null) {
             setPostImage(e.target.files[0])
+            setURL(URL.createObjectURL(e.target.files[0]))
             setMediaType(e.target.files[0].type.split("/")[0])
         }
+        console.log("render handleimagechamge")
     }, [])
 
     const onCancelTask = () => {
@@ -88,7 +90,7 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
             },
             () => {
                 getDownloadURL(uploadTaskRef.current.snapshot.ref).then((url) => {
-                    setURL(url)
+                    // setURL(url)
                     let id = ""
                     fireStore.addDoc(postCollectionRef, {
                         caption,
@@ -129,6 +131,13 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
         setWordCount(e.target.value.length)
         setCaption(e.target.value)
     }, [])
+
+    const renderVideo = useMemo(() => (
+            <video src={url} className='w-auto h-auto smmd:h-auto'
+                preload="auto"
+                controls
+            ></video>
+    ), [postImage])
 
     if (!isCreate) return <></>
     return (
@@ -201,7 +210,8 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
                                                         mediaType === 'image' ?
                                                             <img onClick={() => filepickerRef.current.click()} src={URL.createObjectURL(postImage)} alt="" className='w-auto h-auto smmd:h-auto ' />
                                                             :
-                                                            <video src={URL.createObjectURL(postImage)} className='w-auto h-auto smmd:h-auto' ></video>
+                                                            // <video src={URL.createObjectURL(postImage)} className='w-auto h-auto smmd:h-auto' ></video>
+                                                            renderVideo
                                                     }
                                                 </div>
                                                 <input
@@ -210,7 +220,7 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
                                                     }}
                                                     ref={filepickerRef}
                                                     type="file"
-                                                    accept="image/*"
+                                                    accept=""
                                                     hidden
                                                     disabled={progress > 0}
                                                 />
