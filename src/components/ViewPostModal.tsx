@@ -154,17 +154,17 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                             </div>
                                         </div>
                                         <div className="grow flex flex-col justify-between">
-                                            <div className="hidden sm:flex justify-between items-center">
-                                                <div className="gap-4 items-center px-3 sm:p-3 hidden sm:flex">
+                                            <div className="hidden sm:flex justify-between px-3 sm:p-3 items-center">
+                                                <div className="gap-4 items-center  hidden sm:flex">
                                                     <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
                                                     <span className="text-sm font-semibold">{user?.username}</span>
                                                 </div>
                                                 {
                                                     currentUser?.uid === user?.uid &&
                                                     <button onClick={(e) => setIsDelete(true)}>
-                                                        {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                                        </svg> */}
+                                                        </svg>
 
                                                     </button>
                                                 }
