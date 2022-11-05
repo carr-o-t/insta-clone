@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Insta } from '../types'
 import Avatar from './Avatar'
 import { XIcon, HeartIcon, ChatAlt2Icon, ShareIcon, BookmarkIcon } from '@heroicons/react/outline'
@@ -17,10 +17,8 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
     const [isDelete, setIsDelete] = useState<boolean>(false)
     const [user, setUser] = useState<fireStore.DocumentData | undefined>()
     const [isReadMore, setIsReadMore] = useState<boolean>(false)
-    const [userRef, setUserRef] = useState<fireStore.DocumentData | undefined>()
     const [isUserModalActive, setIsUserModalActive] = useState<boolean>(false)
     const [likeCount, setLikeCount] = useState(0)
-    const [postid, setPostId] = useState<string | undefined>("")
     const closeModal = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
     const icons = React.useMemo(() => {
         return [
@@ -40,7 +38,6 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
         })
     }
     const getIsLikedByUser = async () => {
-        setPostId(postID)
         const postLikedDocSnap = await fireStore.getDoc(fireStore.doc(store, `posts/${postID}/likedBy/${currentUser?.uid}`));
         if (postLikedDocSnap.exists()) {
             setIsLiked(true)
@@ -153,7 +150,7 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                 }
                                             </div>
                                         </div>
-                                        <div className="grow flex flex-col justify-between">
+                                        <div className="grow flex flex-col justify-between p-3">
                                             <div className="hidden sm:flex justify-between px-3 sm:p-3 items-center">
                                                 <div className="gap-4 items-center  hidden sm:flex">
                                                     <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
@@ -228,6 +225,7 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                 isDelete={isDelete}
                 isClose={(e) => setIsDelete(false)}
                 postID={postID}
+                handleModalRef={closeModal}
             />
         </>
     )
