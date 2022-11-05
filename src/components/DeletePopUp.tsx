@@ -4,13 +4,15 @@ import { toast, ToastContainer } from "react-toastify";
 import { deletePostByPostID } from "../functions/services";
 import { Insta } from "../types";
 
-export default function DeletePopUp({ isDelete, isClose, postID }: Insta.deleteProp) {
+export default function DeletePopUp({ isDelete, isClose, postID, handleModalRef }: Insta.deleteProp) {
 
     const closeModal = useRef() as React.MutableRefObject<HTMLButtonElement>;
 
     const handleDelete = () => {
         deletePostByPostID(postID).then(() => toast.success("Post deleted!")).catch(() => toast.error("couldn't delete the post. Please try again!"));
+        handleModalRef?.current.click();
         closeModal.current.click();
+        return true
     }
 
     return (
