@@ -36,7 +36,6 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
 
     useEffect(() => {
         setPostImage(null)
-        console.log("render iscreate change")
     }, [isCreate])
 
     const handleRef = () => {
@@ -59,7 +58,6 @@ function CreatePost({ isCreate, onClose }: Insta.CreatePostProp) {
             setURL(URL.createObjectURL(e.target.files[0]))
             setMediaType(e.target.files[0].type.split("/")[0])
         }
-        console.log("render handleimagechamge")
     }, [])
 
     const onCancelTask = () => {
