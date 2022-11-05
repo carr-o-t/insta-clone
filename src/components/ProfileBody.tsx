@@ -32,9 +32,11 @@ function ProfileBody({ userID }: Insta.ProfileBodyProps) {
         setLoading(true)
         const postRef = fireStore.query(fireStore.collection(store, `posts`), fireStore.where('byUser', "==", userID), fireStore.orderBy("timestamp", "desc"))
         fireStore.onSnapshot(postRef, (querySnapShot) => {
+           setPostList( querySnapShot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
             setPostCount(querySnapShot.size)
         });
-        getPostsByUserID(userID).then((result) => setPostList(result)).finally(() => setLoading(false))
+        setLoading(false)
+        // getPostsByUserID(userID).then((result) => setPostList(result)).finally(() => setLoading(false))
     }, [])
 
 
