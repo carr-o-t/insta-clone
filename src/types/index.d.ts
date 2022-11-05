@@ -111,6 +111,7 @@ declare namespace Insta {
         isDelete?: boolean;
         isClose?: (e: React.MouseEvent<HTMLButtonElement>) => void;
         postID?: string;
+        handleModalRef?: React.MutableRefObject<HTMLButtonElement>;
     }
 
     interface Dropdown {
