@@ -1523,6 +1523,11 @@ video {
   padding-bottom: 1rem;
 }
 
+.px-0{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .pt-3{
   padding-top: 0.75rem;
 }
@@ -2079,9 +2084,18 @@ body{
     border-width: 1px;
   }
 
+  .sm\:border-t{
+    border-top-width: 1px;
+  }
+
   .sm\:border-festa-eight{
     --tw-border-opacity: 1;
     border-color: rgb(133 129 160 / var(--tw-border-opacity));
+  }
+
+  .sm\:border-t-festa-eight{
+    --tw-border-opacity: 1;
+    border-top-color: rgb(133 129 160 / var(--tw-border-opacity));
   }
 
   .sm\:p-3{
