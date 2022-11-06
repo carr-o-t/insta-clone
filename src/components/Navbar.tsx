@@ -17,6 +17,7 @@ import CreatePost from './CreatePost'
 import { auth, firebaseAuth, fireStore, store } from '../firebase'
 import { useAuth } from '../context/AuthProvider'
 import Search from './Search'
+import { Insta } from '../types'
 
 
 
@@ -52,6 +53,11 @@ function Navbar() {
         })
     }, [])
 
+    const handleCreate = () => {
+        // e.preventDefault();
+        setIsCreate(false);
+    }
+
     React.useEffect(() => {
         getCurrentUser();
 
@@ -81,18 +87,18 @@ function Navbar() {
                             >
                                 <img src={userRef?.photoURL} loading="lazy" className="h-full w-full object-cover rounded-full" alt="" />
                             </Menu.Button>
-                            <DropDown />
+                            <DropDown onClick={() => setIsCreate(true)} />
                         </Menu>
                     </div>
                 </div>
             </nav>
 
-            <CreatePost isCreate={isCreate} onClose={(e) => { setIsCreate(false) }} />
+            <CreatePost isCreate={isCreate} onClose={() => handleCreate()} />
         </>
     )
 }
 
-function DropDown() {
+function DropDown({onClick}: Insta.DropDownProp) {
 
     const navigate = useNavigate()
     const { currentUser } = useAuth()
@@ -125,20 +131,20 @@ function DropDown() {
             </Menu.Item>
             <Menu.Item>
                 {({ active }) => (
-                    <a
+                    <button
                         className={`flex sm:hidden flex-row items-center gap-5 p-2 mb-1 rounded-md  font-medium ${active && 'bg-festa-six text-festa-one duration-75 font-semibold scale-105 '}`}
-                        href="/settings"
+                        onClick={onClick}
                     >
                         <PlusCircleIcon className='h-5 w-5' />
                         <span className="text-sm">Create Post</span>
-                    </a>
+                    </button>
                 )}
             </Menu.Item>
             <Menu.Item>
                 {({ active }) => (
                     <a
                         className={`flex sm:hidden flex-row items-center gap-5 p-2 mb-1 rounded-md  font-medium ${active && 'bg-festa-six text-festa-one duration-75 font-semibold scale-105 '}`}
-                        href="/settings"
+                        href="/chat"
                     >
                         <ChatIcon className='h-5 w-5' />
                         <span className="text-sm">Chat</span>

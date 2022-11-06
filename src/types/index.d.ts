@@ -150,5 +150,8 @@ declare namespace Insta {
         status: 'success' | 'fail' | 'deleted' | '';
         message: '' | string;
     }
+    interface DropDownProp {
+        onClick?: () => void;
+    }
 
 }

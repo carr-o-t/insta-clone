@@ -14,9 +14,9 @@ function Home() {
   const { currentUser } = useAuth()
   const navigate = useNavigate()
 
-  const [postList, setPostList] = useState([]);
+  const [postList, setPostList] = useState(Array<fireStore.DocumentData | undefined >);
   const [loading, setLoading] = useState(true);
-  const [latestDoc, setLatestDoc] = useState(null)
+  const [latestDoc, setLatestDoc] = useState<fireStore.DocumentData | undefined | null>(null)
   const [loadMore, setLoadMore] = useState(true)
   const [updated, setUpdated] = useState(false);
   const postCollectionRef = collection(store, "posts");
@@ -125,7 +125,7 @@ function Home() {
     <>
       
       {
-        !loading && postList.length === 0 ?
+        !loading && postList?.length === 0 ?
           <>
             <div className="flex flex-col justify-centerw-full h-full max-w-4xl m-auto p-2">
               <h2 className="text-center font-bold text-lg">No Posts made yet!</h2>
@@ -143,7 +143,7 @@ function Home() {
       }
            <div className="space-y-5">
         {
-          postList?.map((post, idx) => {
+          postList?.map((post: any, idx:any) => {
             return <PostLayout caption={post.caption} likes={post.likes} media={post.imgURL } mediaType={post.mediaType} byUser={post.byUser} postID={post?.id} createdAt={(post?.timestamp)} key={idx} />
           })
         }
