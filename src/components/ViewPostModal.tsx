@@ -120,18 +120,18 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                     <div className="flex flex-col sm:flex-row h-full">
                                         <div className="flex justify-between items-center p-3 sm:hidden">
                                             <div className="flex gap-4 items-center ">
-                                            <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
-                                            <span className="text-sm font-semibold">{user?.username}</span>
-                                        </div>
-                                        {
+                                                <Avatar link={posts.postDetail.byUser} image={user?.photoURL} className="h-8 w-8 object-cover" />
+                                                <span className="text-sm font-semibold">{user?.username}</span>
+                                            </div>
+                                            {
                                                 currentUser?.uid === user?.uid &&
-                                            <button onClick={(e) => setIsDelete(true)}>
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-                                                </svg>
+                                                <button onClick={(e) => setIsDelete(true)}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-8 h-8">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                                                    </svg>
 
-                                            </button>
-                                        }
+                                                </button>
+                                            }
                                         </div>
                                         <div className="sm:basis-[50%] basis-[64%] shrink-0 bg-black sm:rounded-tl-2xl sm:rounded-bl-2xl overflow-hidden">
                                             <div className="group w-full h-full flex justify-center items-center bg-black relative overflow-hidden">
@@ -166,7 +166,7 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                                     </button>
                                                 }
                                             </div>
-                                            <div className="border-t border-t-festa-eight flex gap-2 items-baseline px-3 py-1 sm:p-3">
+                                            <div className="border-0 sm:border-t sm:border-t-festa-eight flex gap-2 items-baseline px-0 py-1 sm:p-3">
                                                 <div className="">
                                                     <span className="text-sm font-semibold">{user?.username}</span>
                                                 </div>
@@ -189,21 +189,41 @@ function ViewPostModal({ postID, userID, posts, viewPost, onClose }: Insta.ViewP
                                             <div className="hidden sm:block grow text-sm p-3" >
                                                 no comments!
                                             </div>
-                                            <div className="px-4 py-1 sm:p-4 flex justify-between items-center">
-                                                <div className="flex gap-4 ">
-                                                    {
-                                                        icons.map(({ id, icon: Component, onClick }) => {
-                                                            return (
-                                                                <Component className={`h-6 sm:h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
-                                                            )
-                                                        })
-                                                    }
+                                            <div className="hidden sm:block">
+                                                <div className="p-4 flex justify-between items-center">
+                                                    <div className="flex gap-4 ">
+                                                        {
+                                                            icons.map(({ id, icon: Component, onClick }) => {
+                                                                return (
+                                                                    <Component className={`h-7 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
+                                                                )
+                                                            })
+                                                        }
+                                                    </div>
+                                                    <BookmarkIcon className="h-7 w-auto" />
                                                 </div>
-                                                <BookmarkIcon className="h-7 w-auto" />
+                                                <div className="p-4 text-sm flex gap-x-2">
+                                                    <p className="">{likeCount}</p>
+                                                    <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleisUserModalActive(e)}>likes</a>
+                                                </div>
                                             </div>
-                                            <div className="px-4 sm:p-4 text-sm flex gap-x-2">
-                                                <p className="">{likeCount}</p>
-                                                <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleisUserModalActive(e)}>likes</a>
+                                            <div className="block sm:hidden">
+                                                <div className="px-0 py-1 flex justify-between items-center">
+                                                    <div className="flex gap-4 ">
+                                                        {
+                                                            icons.map(({ id, icon: Component, onClick }) => {
+                                                                return (
+                                                                    <Component className={`h-6 w-auto cursor-pointer ${(id === "hearticon" && isLiked) ? 'fill-festa-two stroke-0' : ""}`} onClick={onClick} />
+                                                                )
+                                                            })
+                                                        }
+                                                    </div>
+                                                    <BookmarkIcon className="h-7 w-auto" />
+                                                </div>
+                                                <div className="px-0 text-sm flex gap-x-2">
+                                                    <p className="">{likeCount}</p>
+                                                    <a href='' className="no-underline text-black font-semibold " onClick={(e) => handleisUserModalActive(e)}>likes</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
