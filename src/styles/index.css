@@ -1518,14 +1518,14 @@ video {
   padding-right: 0.5rem;
 }
 
-.py-4{
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
 .px-0{
   padding-left: 0px;
   padding-right: 0px;
+}
+
+.py-4{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .pt-3{
@@ -2024,10 +2024,6 @@ body{
     height: 2rem;
   }
 
-  .sm\:h-7{
-    height: 1.75rem;
-  }
-
   .sm\:h-40{
     height: 10rem;
   }
@@ -2100,10 +2096,6 @@ body{
 
   .sm\:p-3{
     padding: 0.75rem;
-  }
-
-  .sm\:p-4{
-    padding: 1rem;
   }
 
   .sm\:p-8{
