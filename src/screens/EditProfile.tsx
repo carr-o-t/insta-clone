@@ -27,7 +27,6 @@ function EditProfile() {
     const [userUpdateData, setUserUpdateData] = useState({
         name: "",
         username: "",
-        email: "",
         bio: "",
         link: ""
     })
@@ -60,8 +59,6 @@ function EditProfile() {
                 banner: bannerPreview,
                 photoURL: preview,
                 displayName: userUpdateData.name,
-                email: userUpdateData.email,
-                username: userUpdateData.username,
                 uid: currentUser?.uid,
                 bio: userUpdateData.bio,
                 link: userUpdateData.link
@@ -83,7 +80,6 @@ function EditProfile() {
                     fireStore.updateDoc(fireStore.doc(store, `users/${currentUser?.uid}`), {
                         banner: url,
                         displayName: userUpdateData.name,
-                        email: userUpdateData.email,
                         username: userUpdateData.username,
                         uid: currentUser?.uid,
                         bio: userUpdateData.bio,
@@ -113,7 +109,6 @@ function EditProfile() {
             fireStore.updateDoc(fireStore.doc(store, `users/${currentUser?.uid}`), {
                 photoURL: preview,
                 displayName: userUpdateData.name,
-                email: userUpdateData.email,
                 username: userUpdateData.username,
                 uid: currentUser?.uid,
                 bio: userUpdateData.bio,
@@ -140,7 +135,6 @@ function EditProfile() {
                         photoURL: url,
                         // banner
                         displayName: userUpdateData.name,
-                        email: userUpdateData.email,
                         username: userUpdateData.username,
                         uid: currentUser?.uid,
                         bio: userUpdateData.bio,
@@ -178,7 +172,6 @@ function EditProfile() {
             setUserUpdateData({
                 name: querySnapShot.data()?.displayName,
                 username: querySnapShot.data()?.username,
-                email: querySnapShot.data()?.email,
                 bio: querySnapShot.data()?.bio,
                 link: querySnapShot.data()?.link
             })
@@ -279,7 +272,6 @@ function EditProfile() {
                     <div className="flex flex-col gap-6 p-4 sm:p-0">
                         <EditInput value={userUpdateData.name} onChange={(e) => setUserUpdateData({ ...userUpdateData, name: e.target.value })} type="text" placeholder="Name" label="Name" />
                         <EditInput value={userUpdateData.username} onChange={(e) => setUserUpdateData({ ...userUpdateData, username: e.target.value })} type="text" placeholder="username" label="Username" />
-                        <EditInput value={userUpdateData.email} onChange={(e) => setUserUpdateData({ ...userUpdateData, email: e.target.value })} type="email" placeholder="Email" label="Email" />
                         <EditInput value={userUpdateData.link} onChange={(e) => setUserUpdateData({ ...userUpdateData, link: e.target.value })} type="text" placeholder="attach any link if present" label="Link" />
                         <div className="flex flex-col gap-4 sm:flex-row sm:gap-16">
                             <label htmlFor="" className="w-28 font-semibold">Bio</label>
