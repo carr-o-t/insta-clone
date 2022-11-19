@@ -4,12 +4,24 @@
 @tailwind utilities;
 @tailwind components;
 
+
 body {
-  @apply bg-festa-one font-mono  min-h-screen;
+  @apply bg-festa-one font-mono  min-h-screen ;
 }
 
 #root {
   @apply min-h-screen flex flex-col;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .img-alt {

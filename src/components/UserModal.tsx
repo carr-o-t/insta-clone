@@ -113,7 +113,7 @@ function UserModal({
                                 leaveFrom="opacity-100 scale-100"
                                 leaveTo="opacity-0 scale-95"
                             >
-                                <Dialog.Panel as="div" className="w-full max-w-md  overflow-scroll transform rounded-2xl bg-festa-one p-4 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Panel as="div" className="w-full max-w-md no-scrollbar overflow-scroll transform rounded-2xl bg-festa-one p-4 text-left align-middle shadow-xl transition-all">
                                     <Dialog.Title
                                         as="div"
                                         className="relative border-b border-festa-five"
@@ -128,7 +128,7 @@ function UserModal({
                                             <XIcon type="button" className="absolute h-auto w-auto top-0 right-0 cursor-pointer" />
                                         </button>
                                     </Dialog.Title>
-                                    <div className="mt-2 max-h-56 overflow-scroll">
+                                    <div className="mt-2 max-h-56 overflow-y-scroll no-scrollbar">
                                         {usersList?.length > 0 ?
                                             usersList?.map((user: any, idx: any) => {
                                                 return (

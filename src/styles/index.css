@@ -1214,6 +1214,10 @@ video {
   overflow-y: auto;
 }
 
+.overflow-y-scroll{
+  overflow-y: scroll;
+}
+
 .truncate{
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1854,6 +1858,21 @@ body{
   display: flex;
   min-height: 100vh;
   flex-direction: column;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .img-alt {
